@@ -1,0 +1,16 @@
+name: sym
+description: A starting point for Dart libraries or applications.
+version: 1.0.0
+# repository: https://github.com/my_org/my_repo
+
+environment:
+  sdk: ^3.3.0
+
+# Add regular dependencies here.
+dependencies:
+  collection: ^1.18.0
+  async: ^2.11.0
+
+dev_dependencies:
+  lints: ^2.0.0
+  test: ^1.21.0
