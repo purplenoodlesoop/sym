@@ -2,13 +2,18 @@ import 'random_user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sym/flutter_sym.dart';
 
-class RandomUserPage extends SymWidget {
+class RandomUserPage extends StatefulWidget {
   const RandomUserPage({
     super.key,
   });
 
   @override
-  Widget build(SymBuildContext context) {
+  State<StatefulWidget> createState() => _RandomUserPageState();
+}
+
+class _RandomUserPageState extends SymWidgetState<RandomUserPage> {
+  @override
+  Widget buildWidget(SymBuildContext context) {
     final m = context.use(randomUser);
     final control = m.control;
     final user = context.use(m.user);
@@ -24,23 +29,17 @@ class RandomUserPage extends SymWidget {
                   const Text('Keep updated'),
                   Checkbox(
                     value: context.use(control.keepUpdated.get),
-                    onChanged: isLoading
-                        ? null
-                        : (value) => control.keepUpdated.set(context, value!),
+                    onChanged: isLoading ? null : (value) => control.keepUpdated.set(context, value!),
                   ),
                 ],
               ),
               SegmentedButton<Gender>(
-                segments: Gender.values
-                    .map((gender) =>
-                        ButtonSegment(value: gender, label: Text(gender.name)))
-                    .toList(),
+                segments:
+                    Gender.values.map((gender) => ButtonSegment(value: gender, label: Text(gender.name))).toList(),
                 selected: {
                   context.use(control.gender.get),
                 },
-                onSelectionChanged: isLoading
-                    ? null
-                    : (genders) => control.gender.set(context, genders.first),
+                onSelectionChanged: isLoading ? null : (genders) => control.gender.set(context, genders.first),
               ),
             ],
           ),

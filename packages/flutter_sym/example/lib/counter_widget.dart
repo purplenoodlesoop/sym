@@ -16,13 +16,18 @@ final counter = Module(name: 'counter', ($) {
   );
 });
 
-class CounterWidget extends SymWidget {
+class CounterWidget extends StatefulWidget {
   const CounterWidget({
     super.key,
   });
 
   @override
-  Widget build(SymBuildContext context) {
+  State<StatefulWidget> createState() => _CounterWidgetState();
+}
+
+class _CounterWidgetState extends SymWidgetState<CounterWidget> {
+  @override
+  Widget buildWidget(SymBuildContext context) {
     final (:increment, :value) = context.use(counter);
 
     return Center(

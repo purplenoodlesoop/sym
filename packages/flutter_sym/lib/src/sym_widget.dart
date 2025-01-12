@@ -1,34 +1,30 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_sym/src/module_manager_state_mixin.dart';
 import 'package:flutter_sym/src/sym_build_context.dart';
 import 'package:sym/sym.dart';
 
-abstract class SymWidget extends StatefulWidget {
-  const SymWidget({super.key});
-
-  Widget build(SymBuildContext context);
-
-  @override
-  State<SymWidget> createState() => _SymWidgetState();
-}
-
-class _SymWidgetState extends State<SymWidget>
-    with ModuleManagerStateMixin<SymWidget, Store<Widget>> {
+abstract class SymWidgetState<W extends StatefulWidget> extends State<W>
+    with ModuleManagerStateMixin<W, Store<Widget>> {
   SymBuildContextImplementation? _debugSymContext;
   Widget? _debugHotReloadAwareChild;
 
+  Widget buildWidget(SymBuildContext context);
+
   @override
+  @nonVirtual
   void reassemble() {
     super.reassemble();
     if (patchHotReload) {
-      _debugHotReloadAwareChild = widget.build(_debugSymContext!);
+      _debugHotReloadAwareChild = buildWidget(_debugSymContext!);
     }
   }
 
   bool get patchHotReload => true;
 
   @override
-  Module<Store<Widget>> createModule() => Module(name: 'SymWidget', ($) {
+  @nonVirtual
+  Module<Store<Widget>> createModule() => Module(name: 'SymWidget($W)', ($) {
         final result = $.value((valueSym) {
           final symContext = SymBuildContextImplementation(
             runtime,
@@ -36,7 +32,7 @@ class _SymWidgetState extends State<SymWidget>
             valueSym,
             context,
           );
-          final built = widget.build(symContext);
+          final built = buildWidget(symContext);
 
           if (patchHotReload) {
             _debugSymContext = symContext;
@@ -53,6 +49,7 @@ class _SymWidgetState extends State<SymWidget>
       });
 
   @override
+  @nonVirtual
   Widget build(BuildContext context) {
     final use = runtime.use;
     final output = use(use(module));
