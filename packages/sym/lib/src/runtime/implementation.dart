@@ -77,7 +77,6 @@ class RuntimeImplementation implements Runtime, EffectSym {
     _runtimeOf(module)
         ._storeDependencies
         .addDependency(store, dependsOn: dependsOn);
-    Debug.dependency.arrow(dependsOn, store);
   }
 
   void addModuleDependency(
@@ -87,7 +86,6 @@ class RuntimeImplementation implements Runtime, EffectSym {
     _runtimeOf(module)
         ._moduleDependencies
         .addDependency(module, dependsOn: dependsOn);
-    Debug.dependency.arrow(dependsOn, module);
   }
 
   ({Store<T> store, bool Function() shouldUpdate}) _createUpdate<T>(
@@ -140,7 +138,6 @@ class RuntimeImplementation implements Runtime, EffectSym {
     RuntimeImplementation i,
     Module<T> module,
   ) {
-    Debug.create(module);
     final init = trigger<()>(name: 'init', source: module);
     final dispose = trigger<()>(name: 'dispose', source: module);
     final runtime = ModuleRuntime<T>(
@@ -202,7 +199,6 @@ class RuntimeImplementation implements Runtime, EffectSym {
       name,
       _eventsController.stream,
     );
-    Debug.create('${source ?? 'Runtime'}.$trigger');
 
     return trigger;
   }
@@ -233,13 +229,14 @@ class RuntimeImplementation implements Runtime, EffectSym {
     final moduleDependencies = data._moduleDependencies;
 
     if (state == null) return false;
-
     await _disposeModule(state, module);
-    for (final dependent in moduleDependencies.dependentsOf(module)) {
+
+    for (final dependent in moduleDependencies.dependentsOf(module).toSet()) {
       moduleDependencies.removeDependency(from: dependent, to: module);
       await detachModule(dependent);
     }
-    for (final dependency in moduleDependencies.dependenciesOf(module)) {
+    for (final dependency
+        in moduleDependencies.dependenciesOf(module).toSet()) {
       final inactive = moduleDependencies.dependentsOf(dependency).isEmpty;
       moduleDependencies.removeDependency(from: module, to: dependency);
       if (!dependency.keepAlive && inactive) await detachModule(dependency);

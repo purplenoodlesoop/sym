@@ -1,6 +1,5 @@
 import 'package:sym/src/interfaces.dart';
 import 'package:sym/src/runtime/implementation.dart';
-import 'package:sym/src/runtime/shared.dart';
 
 final class StoreRuntime<T> implements StoreConsumer, StoreSym<T> {
   final RuntimeImplementation _runtime;
@@ -18,7 +17,6 @@ final class StoreRuntime<T> implements StoreConsumer, StoreSym<T> {
 
   @override
   void on<A extends Object?>(Event<A> event, T Function(A value) reduce) {
-    Debug.subscribe.arrow(event, _store);
     reducer.putIfAbsent(event, () => []).add((handler: reduce));
   }
 }

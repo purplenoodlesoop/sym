@@ -26,10 +26,6 @@ class ModuleRuntime<A> implements ModuleSym {
   late final ModuleSubscriptions subscriptions = {};
   late final Set<Store> createdStores = {};
 
-  void _logCreate(Object object) {
-    Debug.create('$_module.$object');
-  }
-
   @override
   T use<T extends Object?>(Module<T> module) {
     _runtime.addModuleDependency(_module, dependsOn: module);
@@ -65,7 +61,6 @@ class ModuleRuntime<A> implements ModuleSym {
       return initialState;
     });
     createdStores.add(outputStore);
-    _logCreate(outputStore);
 
     return outputStore;
   }
@@ -87,7 +82,6 @@ class ModuleRuntime<A> implements ModuleSym {
       return value;
     });
     createdStores.add(store);
-    _logCreate(store);
 
     return store;
   }
@@ -98,7 +92,6 @@ class ModuleRuntime<A> implements ModuleSym {
     Effect<T> body, {
     Store<Transformer>? transformer,
   }) {
-    Debug.subscribe.arrow('$_module.$event', _module);
     if (event is Store<T>) _runtime.useStore(event);
     _effects
         .putIfAbsent(

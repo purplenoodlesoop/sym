@@ -12,7 +12,7 @@ abstract interface class Consumer {
   T use<T>(covariant Ref<T> value);
 }
 
-abstract interface class Identity<T extends Object?> {
+abstract interface class HasIdentity<T extends Object?> {
   T get self;
 }
 
@@ -37,7 +37,7 @@ abstract interface class StoreConsumer implements Consumer {
   T use<T extends Object?>(Store<T> store);
 }
 
-abstract class StoreSym<S> implements Identity<S>, StoreConsumer {
+abstract class StoreSym<S> implements HasIdentity<S>, StoreConsumer {
   void on<A extends Object?>(
     Event<A> event,
     S Function(A event) reduce,
@@ -72,7 +72,7 @@ abstract interface class ModuleConsumer implements Consumer {
 }
 
 abstract interface class ModuleSym
-    implements Identity<ModuleMeta>, ModuleConsumer {
+    implements HasIdentity<ModuleMeta>, ModuleConsumer {
   Trigger<T> trigger<T extends Object?>({
     String? name,
   });

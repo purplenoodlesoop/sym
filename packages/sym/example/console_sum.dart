@@ -3,7 +3,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:sym/src/runtime/shared.dart';
 import 'package:sym/sym.dart';
 
 final consoleSum = Module(name: 'main', ($) {
@@ -32,6 +31,5 @@ final consoleSum = Module(name: 'main', ($) {
 });
 
 Future<void> main() async {
-  Debug.log = true;
   Runtime().use(consoleSum);
 }

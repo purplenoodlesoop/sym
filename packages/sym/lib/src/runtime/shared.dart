@@ -45,19 +45,3 @@ final class DelegateStore<T> extends SelfPredicateMessage<T>
   @override
   T describe(StoreConsumer $) => _describe(this, $);
 }
-
-enum Debug {
-  create,
-  subscribe,
-  dependency;
-
-  static bool log = false;
-
-  void call(Object object) {
-    if (log) print('$name | $object');
-  }
-
-  void arrow(Object from, Object to) {
-    call('$from -> $to');
-  }
-}

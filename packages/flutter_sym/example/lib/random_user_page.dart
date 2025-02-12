@@ -54,7 +54,7 @@ class RandomUserPage extends SymWidget {
           ],
           ElevatedButton(
             onPressed: isLoading ? null : () => control.fetch(context),
-            child: const Text('Fetch use'),
+            child: const Text('Fetch user'),
           ),
         ],
       ),

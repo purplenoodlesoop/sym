@@ -4,25 +4,29 @@ import 'package:sym/sym.dart';
 
 mixin ModuleManagerStateMixin<T extends StatefulWidget, A extends Object?>
     on State<T> {
-  late Runtime _runtime;
+  Runtime? _runtime;
 
   late final Module<A> module = createModule();
-  Runtime get runtime => _runtime;
+
+  Runtime get runtime => _runtime!;
 
   Module<A> createModule();
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _runtime = SymRuntimeScope.of(context);
-    runtime
-      ..detachModule(module)
-      ..use(module);
+    final runtime = SymRuntimeScope.of(context);
+    if (runtime != _runtime) {
+      _runtime = runtime;
+      runtime
+        ..detachModule(module)
+        ..use(module);
+    }
   }
 
   @override
   void dispose() {
-    _runtime.detachModule(module);
+    _runtime?.detachModule(module);
     super.dispose();
   }
 }
