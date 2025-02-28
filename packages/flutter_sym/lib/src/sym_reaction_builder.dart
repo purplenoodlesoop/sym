@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sym/src/module_manager_state_mixin.dart';
+import 'package:flutter_sym/src/sym_runtime_scope.dart';
 import 'package:sym/sym.dart';
 
-typedef ReactionBuilderBody = void Function(BuildContext context, ModuleSym $);
+typedef ReactionBuilderBody = void Function(
+  BuildContext context,
+  ModuleHooks $,
+);
 
 class SymReactionBuilder extends StatefulWidget {
   final ReactionBuilderBody body;
@@ -18,17 +21,33 @@ class SymReactionBuilder extends StatefulWidget {
   State<SymReactionBuilder> createState() => _SymReactionBuilderState();
 }
 
-class _SymReactionBuilderState extends State<SymReactionBuilder>
-    with ModuleManagerStateMixin<SymReactionBuilder, ()> {
-  @override
-  Module<()> createModule() => Module(name: 'SymReactionBuilder', ($) {
-        widget.body(context, $);
+class _SymReactionBuilderState extends State<SymReactionBuilder> {
+  late final Module<()> module = Module(name: 'SymReactionBuilder', ($) {
+    widget.body(context, $);
 
-        return const ();
-      });
+    return const ();
+  });
+
+  Runtime? _runtime;
 
   @override
-  Widget build(BuildContext context) {
-    return widget.child;
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final runtime = SymRuntimeScope.of(context);
+    if (runtime != _runtime) {
+      _runtime = runtime;
+      runtime
+        ..detachModule(module)
+        ..use(module);
+    }
   }
+
+  @override
+  void dispose() {
+    _runtime?.detachModule(module);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }

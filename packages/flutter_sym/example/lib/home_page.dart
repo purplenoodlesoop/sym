@@ -8,16 +8,17 @@ final homeScreen = Module(name: 'homeScreen', ($) {
   return (showCounter: showCounter,);
 });
 
-class MyHomePage extends SymWidget {
+class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key, required this.title});
 
   final String title;
 
   @override
-  Widget build(SymBuildContext context) {
-    final (:showCounter) = context.use(homeScreen);
+  Widget build(BuildContext context) {
+    final $ = context.$;
+    final (:showCounter) = $.use(homeScreen);
 
-    final shouldShow = context.use(showCounter.get);
+    final shouldShow = $.use(showCounter.get);
 
     return Scaffold(
       appBar: AppBar(
@@ -30,7 +31,7 @@ class MyHomePage extends SymWidget {
           children: [
             Switch(
               value: shouldShow,
-              onChanged: (value) => showCounter.set(context, value),
+              onChanged: (value) => showCounter.set($, value),
             ),
             if (shouldShow) ...[
               // const CounterWidget(),

@@ -2,17 +2,18 @@ import 'random_user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_sym/flutter_sym.dart';
 
-class RandomUserPage extends SymWidget {
+class RandomUserPage extends StatelessWidget {
   const RandomUserPage({
     super.key,
   });
 
   @override
-  Widget build(SymBuildContext context) {
-    final m = context.use(randomUser);
+  Widget build(BuildContext context) {
+    final $ = context.$;
+    final m = $.use(randomUser);
     final control = m.control;
-    final user = context.use(m.user);
-    final isLoading = context.use(m.isLoading);
+    final user = $.use(m.user);
+    final isLoading = $.use(m.isLoading);
 
     return Center(
       child: Column(
@@ -23,10 +24,10 @@ class RandomUserPage extends SymWidget {
                 children: [
                   const Text('Keep updated'),
                   Checkbox(
-                    value: context.use(control.keepUpdated.get),
+                    value: $.use(control.keepUpdated.get),
                     onChanged: isLoading
                         ? null
-                        : (value) => control.keepUpdated.set(context, value!),
+                        : (value) => control.keepUpdated.set($, value!),
                   ),
                 ],
               ),
@@ -36,11 +37,11 @@ class RandomUserPage extends SymWidget {
                         ButtonSegment(value: gender, label: Text(gender.name)))
                     .toList(),
                 selected: {
-                  context.use(control.gender.get),
+                  $.use(control.gender.get),
                 },
                 onSelectionChanged: isLoading
                     ? null
-                    : (genders) => control.gender.set(context, genders.first),
+                    : (genders) => control.gender.set($, genders.first),
               ),
             ],
           ),
@@ -53,7 +54,7 @@ class RandomUserPage extends SymWidget {
             Text('User: $user'),
           ],
           ElevatedButton(
-            onPressed: isLoading ? null : () => control.fetch(context),
+            onPressed: isLoading ? null : () => control.fetch($),
             child: const Text('Fetch user'),
           ),
         ],

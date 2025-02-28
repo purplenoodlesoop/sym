@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print, prefer_initializing_formals
 
 import 'package:flutter/material.dart';
+import 'package:flutter_sym/src/inherited_runtime.dart';
 import 'package:sym/sym.dart';
 
 typedef CreateRuntime = Runtime Function(BuildContext context);
@@ -27,7 +28,7 @@ class SymRuntimeScope extends StatefulWidget {
         fork = fork;
 
   static Runtime of(BuildContext context) =>
-      context.getInheritedWidgetOfExactType<_InheritedRuntime>()!.runtime;
+      context.getInheritedWidgetOfExactType<InheritedRuntime>()!.runtime;
 
   @override
   State<SymRuntimeScope> createState() => _SymRuntimeScopeState();
@@ -53,20 +54,8 @@ class _SymRuntimeScopeState extends State<SymRuntimeScope> {
   }
 
   @override
-  Widget build(BuildContext context) => _InheritedRuntime(
+  Widget build(BuildContext context) => InheritedRuntime(
         runtime: runtime,
         child: widget.child,
       );
-}
-
-class _InheritedRuntime extends InheritedWidget {
-  final Runtime runtime;
-
-  const _InheritedRuntime({
-    required this.runtime,
-    required super.child,
-  });
-
-  @override
-  bool updateShouldNotify(_InheritedRuntime oldWidget) => false;
 }

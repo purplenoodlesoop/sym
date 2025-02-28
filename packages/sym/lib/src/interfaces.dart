@@ -71,8 +71,16 @@ abstract interface class ModuleConsumer implements Consumer {
   T use<T extends Object?>(Module<T> module);
 }
 
-abstract interface class ModuleSym
+abstract interface class ModuleHooks
     implements HasIdentity<ModuleMeta>, ModuleConsumer {
+  void on<A extends Object?>(
+    Event<A> event,
+    Effect<A> body, {
+    Store<Transformer>? transformer,
+  });
+}
+
+abstract interface class ModuleSym implements ModuleHooks {
   Trigger<T> trigger<T extends Object?>({
     String? name,
   });
@@ -85,12 +93,6 @@ abstract interface class ModuleSym
   Store<T> value<T extends Object?>(
     ValueBody<T> body, {
     String? name,
-  });
-
-  void on<A extends Object?>(
-    Event<A> event,
-    Effect<A> body, {
-    Store<Transformer>? transformer,
   });
 }
 

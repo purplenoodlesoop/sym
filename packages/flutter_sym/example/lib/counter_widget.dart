@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sym/flutter_sym.dart';
 
-final counter = Module(name: 'counter', ($) {
+final counter = Module(($) {
   final increment = $.trigger<()>();
 
   return (
@@ -16,25 +16,26 @@ final counter = Module(name: 'counter', ($) {
   );
 });
 
-class CounterWidget extends SymWidget {
+class CounterWidget extends StatelessWidget {
   const CounterWidget({
     super.key,
   });
 
   @override
-  Widget build(SymBuildContext context) {
-    final (:increment, :value) = context.use(counter);
+  Widget build(BuildContext context) {
+    final $ = context.$;
+    final (:increment, :value) = $.use(counter);
 
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            context.use(value).toString(),
+            $.use(value).toString(),
             style: Theme.of(context).textTheme.headlineMedium,
           ),
           ElevatedButton(
-            onPressed: () => increment(context),
+            onPressed: () => increment($),
             child: const Text('Increment'),
           ),
         ],
